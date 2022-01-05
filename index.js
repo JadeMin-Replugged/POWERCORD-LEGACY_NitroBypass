@@ -3,17 +3,10 @@ const { FluxDispatcher, getModule } = require("powercord/webpack");
 
 const CONNECTION = new (require("./modules/CONNECTION.js"))();
 const getCurrentUser = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false).getCurrentUser;
-/*const CONNECTION = {
-	isAfterLogin: false,
-	afterLogin: (callback=Function, ...args)=> {
-		return FluxDispatcher.subscribe('CONNECTION_OPEN', function(){
-			FluxDispatcher.unsubscribe('CONNECTION_OPEN', this);
 
-			callback(...args);
-		});
-	}
-};*/
 
+
+const logging = false;
 let defaultPremium = null;
 CONNECTION.afterLogin(function(){
 	defaultPremium = getCurrentUser().premiumType;
@@ -23,7 +16,7 @@ module.exports = class NitroBypass extends Plugin {
 	constructor(){ super(); }
 	
 	setPremiumType(type=Number) {
-		if(!CONNECTION.isConnected) {
+		if(!CONNECTION.isConnected()) {
 			CONNECTION.afterLogin(()=> {
 				getCurrentUser().premiumType = type;
 			});
@@ -34,10 +27,18 @@ module.exports = class NitroBypass extends Plugin {
 	restorePremiumType() {
 		getCurrentUser().premiumType = defaultPremium;
 	}
+
+	
 	startPlugin() {
+		if(logging) {
+			this.check_isConnected = setInterval(function(){
+				console.log(CONNECTION.isConnected());
+			}, 1000);
+		}
 		this.setPremiumType(2);
 	}
 	pluginWillUnload() {
+		if(logging) clearInterval(this.check_isConnected);
 		this.restorePremiumType();
 	}
-}
+};
