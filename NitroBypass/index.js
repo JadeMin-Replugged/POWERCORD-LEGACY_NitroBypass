@@ -22,8 +22,8 @@ CONNECTION.afterLogin(function(){
 module.exports = class NitroBypass extends Plugin {
 	constructor(){ super(); }
 	
-	setPremiumType(type=Number){
-		if(!CONNECTION.isConnected){
+	setPremiumType(type=Number) {
+		if(!CONNECTION.isConnected) {
 			CONNECTION.afterLogin(()=> {
 				getCurrentUser().premiumType = type;
 			});
@@ -31,13 +31,13 @@ module.exports = class NitroBypass extends Plugin {
 			getCurrentUser().premiumType = type;
 		}
 	}
-	restorePremiumType(){
+	restorePremiumType() {
 		getCurrentUser().premiumType = defaultPremium;
 	}
-	startPlugin(){
+	startPlugin() {
 		this.setPremiumType(2);
 	}
-	pluginWillUnload(){
-		this.restorePremiumType(true);
+	pluginWillUnload() {
+		this.restorePremiumType();
 	}
 }
