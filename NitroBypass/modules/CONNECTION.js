@@ -1,4 +1,3 @@
-const { Plugin } = require("powercord/entities");
 const { FluxDispatcher } = require("powercord/webpack");
 let isConnected = false;
 
