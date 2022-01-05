@@ -1,33 +1,43 @@
 const { Plugin } = require("powercord/entities");
 const { FluxDispatcher, getModule } = require("powercord/webpack");
 
+const CONNECTION = new (require("./modules/CONNECTION.js"))();
 const getCurrentUser = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false).getCurrentUser;
+/*const CONNECTION = {
+	isAfterLogin: false,
+	afterLogin: (callback=Function, ...args)=> {
+		return FluxDispatcher.subscribe('CONNECTION_OPEN', function(){
+			FluxDispatcher.unsubscribe('CONNECTION_OPEN', this);
+
+			callback(...args);
+		});
+	}
+};*/
+
 let defaultPremium = null;
-FluxDispatcher.subscribe('CONNECTION_OPEN', function(){
-	FluxDispatcher.unsubscribe('CONNECTION_OPEN', this);
-	
+CONNECTION.afterLogin(function(){
 	defaultPremium = getCurrentUser().premiumType;
 });
-
 
 module.exports = class NitroBypass extends Plugin {
 	constructor(){ super(); }
 	
-	setPremiumType(setDefault=Boolean, type=Number){
-		if(getCurrentUser() === undefined){
-			FluxDispatcher.subscribe('CONNECTION_OPEN', function(){
-				FluxDispatcher.unsubscribe('CONNECTION_OPEN', this);
-				
-				return getCurrentUser().premiumType = setDefault? defaultPremium:type;
+	setPremiumType(type=Number){
+		if(!CONNECTION.isConnected){
+			CONNECTION.afterLogin(()=> {
+				getCurrentUser().premiumType = type;
 			});
 		} else {
-			return getCurrentUser().premiumType = type;
+			getCurrentUser().premiumType = type;
 		}
 	}
+	restorePremiumType(){
+		getCurrentUser().premiumType = defaultPremium;
+	}
 	startPlugin(){
-		this.setPremiumType(false, 2);
+		this.setPremiumType(2);
 	}
 	pluginWillUnload(){
-		this.setPremiumType(true);
+		this.restorePremiumType(true);
 	}
 }
