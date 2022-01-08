@@ -1,5 +1,4 @@
 const { Plugin } = require("powercord/entities");
-const { injector } = require("powercord/index.js");
 const {
 	FluxDispatcher, getModule,
 	messages
