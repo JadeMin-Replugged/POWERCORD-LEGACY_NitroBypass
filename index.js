@@ -42,7 +42,7 @@ module.exports = class NitroBypass extends Plugin {
 		inject(this.injectIDs.sendMessage, messages, 'sendMessage', (args)=> {
 			const [_channelId, message] = args;
 			
-			message.validNonShortcutEmojis.forEach(emoji=> {
+			message.validNonShortcutEmojis?.forEach(emoji=> {
 				if(emoji.url.startsWith("/assets/")) return;
 				const emojiName = emoji.allNamesString.replace(/~\d/g, "");
 				const emojiFullDir = `<${emoji.animated? "a":''}${emojiName}${emoji.id}>`;
@@ -55,12 +55,10 @@ module.exports = class NitroBypass extends Plugin {
 			const [_guildId, _channelId, message] = args;
 			const rawEmojiStrings = message.content.match(/<(a)?:(.*)?:\d{18}>/g);
 
-			if(rawEmojiStrings) {
-				rawEmojiStrings.forEach(rawEmojiString=> {
-					const emojiUrl = `https://cdn.discordapp.com/emojis/${rawEmojiString.match(/\d{18}/g)[0]}?size=${48}`;
-					message.content = message.content.replace(rawEmojiString, emojiUrl);
-				});
-			}
+			rawEmojiStrings?.forEach(rawEmojiString=> {
+				const emojiUrl = `https://cdn.discordapp.com/emojis/${rawEmojiString.match(/\d{18}/g)[0]}?size=${48}`;
+				message.content = message.content.replace(rawEmojiString, emojiUrl);
+			});
 			return args;
 		}, true);
 	};
