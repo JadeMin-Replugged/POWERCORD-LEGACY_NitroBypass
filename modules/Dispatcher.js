@@ -1,12 +1,11 @@
 const { FluxDispatcher, getModule } = require("powercord/webpack");
-const { getCurrentUser } = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false);
+const getCurrentUser = getModule(["getCurrentUser"], false).getCurrentUser;
 
 
 let _isConnected = false;
-module.exports = class DISPATCHER {
+class Dispatcher {
 	constructor() {
 		this.afterLogin(()=> _isConnected = true);
-		this.FluxDispatcher = FluxDispatcher;
 	};
 	
 	isConnected() {
@@ -24,4 +23,11 @@ module.exports = class DISPATCHER {
 	afterLogin(callback=Function, ...args) {
 		return this.once('CONNECTION_OPEN', ()=> callback(...args));
 	};
+};
+
+
+
+module.exports = {
+	Dispatcher: new Dispatcher,
+	FluxDispatcher: FluxDispatcher
 };
