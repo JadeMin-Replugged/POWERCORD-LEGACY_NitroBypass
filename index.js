@@ -1,12 +1,12 @@
 const { Plugin } = require("powercord/entities");
 const {
-	FluxDispatcher, getModule,
+	getModule,
 	messages
 } = require("powercord/webpack");
 const { inject, uninject } = require('powercord/injector');
 
-const Dispatcher = new (require("./modules/Dispatcher.js"))();
-const { getCurrentUser } = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false);
+const { Dispatcher, FluxDispatcher } = require("./modules/Dispatcher.js");
+const getCurrentUser = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false).getCurrentUser;
 
 
 
