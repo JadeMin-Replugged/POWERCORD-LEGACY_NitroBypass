@@ -6,7 +6,7 @@ let _isConnected = false;
 module.exports = class DISPATCHER {
 	constructor() {
 		this.afterLogin(()=> _isConnected = true);
-		//this.Flux = { ...FluxDispatcher };
+		this.FluxDispatcher = FluxDispatcher;
 	};
 	
 	isConnected() {
