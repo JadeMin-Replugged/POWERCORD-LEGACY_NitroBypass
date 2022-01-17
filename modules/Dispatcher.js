@@ -1,5 +1,5 @@
 const { FluxDispatcher, getModule } = require("powercord/webpack");
-const { getCurrentUser } = getModule(["getCurrentUser"], false);
+const { getCurrentUser } = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false);
 
 
 let _isConnected = false;
