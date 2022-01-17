@@ -5,17 +5,16 @@ const {
 } = require("powercord/webpack");
 const { inject, uninject } = require('powercord/injector');
 
-const CONNECTION = new (require("./modules/CONNECTION.js"))();
-const getCurrentUser = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false).getCurrentUser;
+const Dispatcher = new (require("./modules/Dispatcher.js"))();
+const { getCurrentUser } = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false);
 
 
 
 const logging = false;
 let defaultPremium = null;
-CONNECTION.afterLogin(()=> {
+Dispatcher.afterLogin(()=> {
 	defaultPremium = getCurrentUser().premiumType;
 });
-
 module.exports = class NitroBypass extends Plugin {
 	constructor(){
 		super();
@@ -27,8 +26,8 @@ module.exports = class NitroBypass extends Plugin {
 	};
 	
 	setPremiumType(type=Number) {
-		if(!CONNECTION.isConnected()) {
-			CONNECTION.afterLogin(()=> {
+		if(!Dispatcher.isConnected()) {
+			Dispatcher.afterLogin(()=> {
 				getCurrentUser().premiumType = type;
 			});
 		} else {
@@ -73,7 +72,7 @@ module.exports = class NitroBypass extends Plugin {
 	startPlugin() {
 		if(logging) {
 			this.check_isConnected = setInterval(function(){
-				console.log(CONNECTION.isConnected());
+				console.log(Dispatcher.isConnected());
 			}, 1000);
 		}
 
