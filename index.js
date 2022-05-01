@@ -5,7 +5,7 @@ const {
 } = require("powercord/webpack");
 const { inject, uninject } = require('powercord/injector');
 
-const { Dispatcher, FluxDispatcher } = require("./modules/Dispatcher.js");
+const { Dispatcher, FluxDispatcher } = require("./modules/dispatcher.js");
 const getCurrentUser = getModule(["getCurrentUser", "getUser", "_dispatchToken"], false).getCurrentUser;
 
 
